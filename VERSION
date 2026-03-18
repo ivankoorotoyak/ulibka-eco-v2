@@ -1,0 +1,4 @@
+PROJECT: Ulibka Eco System
+VERSION: 2.0.0
+BUILD: $(date +%Y%m%d)
+STATUS: production
