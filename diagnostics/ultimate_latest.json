@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-03-18T18:56:14.300616",
+  "system": {
+    "cpu": {
+      "per_core": [
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "average": 0.3,
+      "processes": 250,
+      "bottleneck": false
+    },
+    "memory": {
+      "total_gb": 15.62,
+      "used_gb": 2.46,
+      "percent": 15.8,
+      "swap_gb": 0.0,
+      "swap_percent": 0.0,
+      "bottleneck": false
+    },
+    "disk": {
+      "total_gb": 153.94,
+      "used_gb": 11.23,
+      "percent": 7.3,
+      "read_mb": 2586.4,
+      "write_mb": 35041.9,
+      "bottleneck": false
+    }
+  },
+  "bots": {
+    "total": 10,
+    "active": 9,
+    "active_list": [
+      "plus",
+      "joke",
+      "clean",
+      "implant",
+      "kid",
+      "philo",
+      "prof",
+      "karta",
+      "dentai"
+    ],
+    "inactive": [
+      "admin"
+    ],
+    "duplicates": {},
+    "memory_mb": {},
+    "bottleneck": true
+  },
+  "database": {
+    "size_kb": 36.0,
+    "size_mb": 0.04,
+    "indexes": 3,
+    "integrity": "ok",
+    "bottleneck": false
+  },
+  "redis": {
+    "status": "online",
+    "memory_mb": 1.0,
+    "clients": 1,
+    "uptime_hours": 0.0,
+    "bottleneck": false
+  },
+  "network": {
+    "ping_telegram_ms": 46.2,
+    "open_ports": [
+      22,
+      80,
+      443,
+      3000,
+      9090,
+      9100,
+      9101,
+      6379
+    ],
+    "bottleneck": false
+  },
+  "optimizations": [
+    "\ud83e\udd16 \u041d\u0435 \u0432\u0441\u0435 \u0431\u043e\u0442\u044b \u0440\u0430\u0431\u043e\u0442\u0430\u044e\u0442: ['admin']"
+  ]
+}

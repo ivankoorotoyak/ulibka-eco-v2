@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.log.*
+venv/
+env/
+.env
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.pass.txt
+*.key
+*.pem
+*.gpg
+*.secret
+/root/.redis_pass.txt
+/root/.art_key_backup.txt
+
+# Local
+logs/
+self-healing/history/
+data/status/
+*.db
+*.db-*
+
+# Backups
+backups/
+*.tar.gz
+*.zip
