@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""
+Загрузчик ботов - упрощенная версия
+Использует прямой вызов run_polling() без asyncio
+"""
+
+import sys
+import os
+import logging
+from pathlib import Path
+
+# Настройка логирования
+log_file = f"/var/log/{sys.argv[1] if len(sys.argv) > 1 else 'loader'}.log"
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO,
+    handlers=[
+        logging.FileHandler(log_file),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+sys.path.insert(0, '/opt/smile_bots')
+
+def load_env():
+    """Загрузка переменных окружения"""
+    env_file = '/opt/smile_bots/.env'
+    if os.path.exists(env_file):
+        with open(env_file, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    if '=' in line:
+                        key, value = line.split('=', 1)
+                        os.environ[key] = value
+                        logger.debug(f"Loaded: {key}")
+
+def get_token(bot_name):
+    """Получение токена"""
+    # Прямое чтение из .env
+    env_file = '/opt/smile_bots/.env'
+    if os.path.exists(env_file):
+        with open(env_file, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    if '=' in line:
+                        key, value = line.split('=', 1)
+                        if key.lower() == f"{bot_name}_token".lower() or \
+                           key.lower() == f"{bot_name.replace('_bot', '')}_token".lower():
+                            return value
+    
+    # Проверка переменных окружения
+    keys = [f"{bot_name.upper()}_TOKEN", bot_name.upper()]
+    for key in keys:
+        token = os.getenv(key)
+        if token:
+            return token
+    
+    return None
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python bot_loader.py <bot_name>")
+        sys.exit(1)
+    
+    bot_name = sys.argv[1]
+    logger.info(f"Starting {bot_name}...")
+    
+    # Загружаем окружение
+    load_env()
+    
+    # Импортируем классы
+    try:
+        from all_bots import BOT_CLASSES
+    except Exception as e:
+        logger.error(f"Cannot import BOT_CLASSES: {e}")
+        sys.exit(1)
+    
+    if bot_name not in BOT_CLASSES:
+        logger.error(f"Bot {bot_name} not found. Available: {list(BOT_CLASSES.keys())}")
+        sys.exit(1)
+    
+    token = get_token(bot_name)
+    if not token:
+        logger.error(f"No token found for {bot_name}")
+        sys.exit(1)
+    
+    logger.info(f"Token found: {token[:10]}...{token[-4:] if len(token) > 14 else ''}")
+    
+    # Создаем бота
+    try:
+        bot = BOT_CLASSES[bot_name](token)
+        logger.info(f"Bot {bot_name} created, starting polling...")
+        
+        # Прямой вызов run() - он уже содержит правильный asyncio.run()
+        # Проверяем, есть ли метод run
+        if hasattr(bot, 'run'):
+            # Запускаем в основном потоке
+            bot.run()
+        else:
+            logger.error(f"Bot {bot_name} has no run() method")
+            sys.exit(1)
+            
+    except KeyboardInterrupt:
+        logger.info(f"{bot_name} stopped by user")
+        sys.exit(0)
+    except Exception as e:
+        logger.error(f"Bot {bot_name} failed: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)

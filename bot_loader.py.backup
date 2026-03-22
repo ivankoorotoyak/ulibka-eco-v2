@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+"""
+Загрузчик ботов с правильным блокирующим вызовом
+Версия: 2.0 - исправленная
+"""
+
+import sys
+import asyncio
+import os
+import logging
+
+# Настройка логирования
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+sys.path.insert(0, '/opt/smile_bots')
+
+# Импортируем необходимые модули
+from all_bots import BOT_CLASSES
+
+
+def get_token(bot_name: str) -> str:
+    """
+    Получение токена для бота с правильным форматом имени.
+    """
+    base_name = bot_name.replace('_bot', '').upper()
+    
+    # Список возможных форматов ключей
+    possible_keys = [
+        f"{base_name}_BOT_TOKEN",
+        f"{base_name}_TOKEN",
+        bot_name.upper().replace('_BOT', '_BOT_TOKEN'),
+    ]
+    
+    # Специальные маппинги
+    special_mapping = {
+        "ai_agent_bot": ["AI_AGENT_BOT_TOKEN", "AI_AGENT_TOKEN"],
+        "dentai_bot": ["DENTAI_BOT_TOKEN", "DENTAI_TOKEN"],
+        "gum_bot": ["GUM_BOT_TOKEN", "GUM_TOKEN"],
+        "shop_bot": ["SHOP_BOT_TOKEN", "SHOP_TOKEN"],
+        "admin_bot": ["ADMIN_BOT_TOKEN", "ADMIN_TOKEN"],
+        "clean_bot": ["CLEAN_BOT_TOKEN", "CLEAN_TOKEN"],
+        "dream_bot": ["DREAM_BOT_TOKEN", "DREAM_TOKEN"],
+        "family_bot": ["FAMILY_BOT_TOKEN", "FAMILY_TOKEN"],
+        "implant_bot": ["IMPLANT_BOT_TOKEN", "IMPLANT_TOKEN"],
+        "inclusive_bot": ["INCLUSIVE_BOT_TOKEN", "INCLUSIVE_TOKEN"],
+        "joke_bot": ["JOKE_BOT_TOKEN", "JOKE_TOKEN"],
+        "karta_bot": ["KARTA_BOT_TOKEN", "KARTA_TOKEN"],
+        "kid_bot": ["KID_BOT_TOKEN", "KID_TOKEN"],
+        "mtproto_bot": ["MTPROTO_BOT_TOKEN", "MTPROTO_TOKEN"],
+        "ortho_bot": ["ORTHO_BOT_TOKEN", "ORTHO_TOKEN"],
+        "philo_bot": ["PHILO_BOT_TOKEN", "PHILO_TOKEN"],
+        "prof_bot": ["PROF_BOT_TOKEN", "PROF_TOKEN"],
+    }
+    
+    # Используем специальный маппинг если есть
+    if bot_name in special_mapping:
+        for key in special_mapping[bot_name]:
+            token = os.getenv(key)
+            if token:
+                logger.debug(f"Token found for {bot_name} via {key}")
+                return token
+    
+    # Общий поиск
+    for key in possible_keys:
+        token = os.getenv(key)
+        if token:
+            logger.debug(f"Token found for {bot_name} via {key}")
+            return token
+    
+    logger.error(f"No token found for {bot_name}")
+    return ""
+
+
+async def run_bot(bot_name: str):
+    """Запуск бота с блокирующим polling"""
+    logger.info(f"Starting {bot_name}...")
+    
+    # Получаем класс бота
+    bot_class = BOT_CLASSES.get(bot_name)
+    if not bot_class:
+        logger.error(f"Unknown bot: {bot_name}")
+        raise ValueError(f"Unknown bot: {bot_name}")
+    
+    # Получаем токен
+    token = get_token(bot_name)
+    if not token:
+        logger.error(f"No token for {bot_name}")
+        raise ValueError(f"No token for {bot_name}")
+    
+    # Маскируем токен в логах
+    masked_token = f"{token[:10]}...{token[-3:]}" if len(token) > 13 else "***"
+    logger.info(f"Using token: {masked_token}")
+    
+    # Создаём экземпляр бота
+    bot = bot_class(token)
+    
+    # Проверяем, есть ли у бота метод run()
+    if hasattr(bot, 'run'):
+        logger.info(f"Running {bot_name} via run() method")
+        await bot.run()
+    elif hasattr(bot, 'get_application'):
+        logger.info(f"Running {bot_name} via get_application().run_polling()")
+        app = bot.get_application()
+        await app.run_polling()
+    else:
+        logger.error(f"Bot {bot_name} has no run() or get_application() method")
+        raise AttributeError(f"Bot {bot_name} has no run() or get_application() method")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: bot_loader.py <bot_name>")
+        print("Available bots:", list(BOT_CLASSES.keys()))
+        sys.exit(1)
+    
+    bot_name = sys.argv[1]
+    
+    try:
+        asyncio.run(run_bot(bot_name))
+    except KeyboardInterrupt:
+        logger.info(f"{bot_name} stopped by user")
+    except Exception as e:
+        logger.error(f"{bot_name} failed: {e}")
+        sys.exit(1)

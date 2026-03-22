@@ -1,0 +1,28 @@
+{
+  "current": {
+    "version": "20260322_000001",
+    "date": "2026-03-22T00:00:01.194456",
+    "files": 16,
+    "path": "/opt/smile_bots/backups/v20260322_000001"
+  },
+  "history": [
+    {
+      "version": "20260322_000001",
+      "date": "2026-03-22T00:00:01.194456",
+      "files": 16,
+      "path": "/opt/smile_bots/backups/v20260322_000001"
+    },
+    {
+      "version": "20260321_000001",
+      "date": "2026-03-21T00:00:01.756777",
+      "files": 13,
+      "path": "/opt/smile_bots/backups/v20260321_000001"
+    },
+    {
+      "version": "20260320_222142",
+      "date": "2026-03-20T22:21:42.612336",
+      "files": 12,
+      "path": "/opt/smile_bots/backups/v20260320_222142"
+    }
+  ]
+}

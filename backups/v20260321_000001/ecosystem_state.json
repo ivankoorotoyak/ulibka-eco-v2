@@ -1,0 +1,83 @@
+{
+  "version": "5.0",
+  "last_updated": "2026-03-20T23:55:01.348322",
+  "ecosystem": {
+    "name": "\u0423\u043b\u044b\u0431\u043a\u0430",
+    "total_bots": 12,
+    "active_bots": 12,
+    "server": "5.42.106.10",
+    "mode": "polling"
+  },
+  "bots": {
+    "prof_bot": {
+      "status": "active",
+      "token_masked": "8795238886...QvI",
+      "service": "prof_bot.service"
+    },
+    "dentai_bot": {
+      "status": "active",
+      "token_masked": "8067738787...8nw",
+      "service": "dentai_bot.service"
+    },
+    "dream_bot": {
+      "status": "active",
+      "token_masked": "8549656262...ceo",
+      "service": "dream_bot.service"
+    },
+    "inclusive_bot": {
+      "status": "active",
+      "token_masked": "8609137704...ymU",
+      "service": "inclusive_bot.service"
+    },
+    "karta_bot": {
+      "status": "active",
+      "token_masked": "8756485893...miE",
+      "service": "karta_bot.service"
+    },
+    "admin_bot": {
+      "status": "active",
+      "token_masked": "8711144543...04U",
+      "service": "admin_bot.service"
+    },
+    "clean_bot": {
+      "status": "active",
+      "token_masked": "8620294844...nfk",
+      "service": "clean_bot.service"
+    },
+    "joke_bot": {
+      "status": "active",
+      "token_masked": "8672286436...gjI",
+      "service": "joke_bot.service"
+    },
+    "implant_bot": {
+      "status": "active",
+      "token_masked": "7330329906...qI4",
+      "service": "implant_bot.service"
+    },
+    "kid_bot": {
+      "status": "active",
+      "token_masked": "8699253183...aD8",
+      "service": "kid_bot.service"
+    },
+    "philo_bot": {
+      "status": "active",
+      "token_masked": "8745571118...h3s",
+      "service": "philo_bot.service"
+    },
+    "implant_bot2": {
+      "status": "active",
+      "token_masked": "8739690225...WAM",
+      "service": "implant_bot2.service"
+    }
+  },
+  "metrics": {
+    "total_elements": 5950,
+    "categories": 19,
+    "criteria": 133
+  },
+  "pending_tasks": [
+    "centralized_logging_completed",
+    "readme_created",
+    "state_file_configured"
+  ]
+}
